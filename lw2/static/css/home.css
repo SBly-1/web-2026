@@ -1,0 +1,133 @@
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_medium.woff2") format("woff2"),
+         url("../fonts/golos-ui_medium.woff") format("woff");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_regular.woff2") format("woff2"),
+         url("../fonts/golos-ui_regular.woff") format("woff");
+    font-weight: 400;
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+.home{
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(34, 34, 34, 0.05);
+    gap: 16px;
+    padding-top: 40px;
+}
+
+.sidebar__item{
+    text-decoration: none;
+}
+
+.sidebar__icon{
+    width: 40px;
+    padding: 0 16px 0;
+}
+
+.content{
+    display: flex;
+    margin: 73px auto 0;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.post{
+    display: flex;
+    flex-direction: column;
+    max-width: 474px;
+}
+
+.post__header{
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+    gap: 10px;
+}
+
+.post__avatar{
+    width: 24px;
+    border-radius: 6px;
+}
+
+.post__author{
+    font: 500 14px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+}
+
+.post__edit{
+    width: 24px;
+    margin-left: auto;
+}
+
+.post__media{
+    display: flex;
+    flex-direction: column;
+}
+
+.post__image-count{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    color: #FFFFFF;
+    letter-spacing: -0.15px;
+    background-color: rgba(34, 34, 34, 0.5);
+    padding: 3px 10px;
+    border-radius: 20px;
+    width: fit-content;
+    margin-left: 414px;
+    /* margin-top: -454px; */
+    transform: translateY(-454px);
+}
+
+.post__image{
+    width: 100%;
+}
+
+.post__likes{
+    display: flex;
+    align-items: center;
+    font: 400 15px/18px "Golos UI", sans-serif;
+    border: none;
+    background-color: rgba(34, 34, 34, 0.05);
+    gap: 1px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin: -8px 0 16px;
+    max-width: 68px;
+}
+
+.post__like-icon{
+    width: 16px;
+}
+
+.post__text{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+}
+
+.post__more{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color: #808080;
+}
+
+.post__time{
+    padding: 8px 0 20px;
+    font: 400 14px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color: rgba(34, 34, 34, 0.5);
+}

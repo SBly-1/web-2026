@@ -1,0 +1,101 @@
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_medium.woff2") format("woff2"),
+         url("../fonts/golos-ui_medium.woff") format("woff");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_regular.woff2") format("woff2"),
+         url("../fonts/golos-ui_regular.woff") format("woff");
+    font-weight: 400;
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+.profile{
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(34, 34, 34, 0.05);
+    gap: 16px;
+    padding-top: 40px;
+}
+
+.sidebar__item{
+    text-decoration: none;
+}
+
+.sidebar__icon{
+    width: 40px;
+    padding: 0 16px 0;
+}
+
+.profile__content{
+    display: flex;
+    flex-direction: column;
+    margin: 73px auto 0;
+}
+
+.profile__info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile__avatar{
+    width: 123px;
+    border-radius: 16px;
+    margin: 24px 0 20px;
+}
+
+.profile__author{
+    font: 500 32px "Golos UI", sans-serif;
+    letter-spacing: -0.25px;
+}
+
+.profile__description{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    max-width: 361px;
+    text-align: center;
+    margin: 10px 0 12px;
+}
+
+.profile__posts-count{
+    display: flex;
+    gap: 6px;
+    padding: 6px 10px;
+    background-color: #F2F3F5;
+    border-radius: 6px;
+    margin-bottom: 42px;
+}
+
+.profile__posts-icon{
+    width: 16px;
+}
+
+.profile__posts-value{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+}
+
+.profile__posts{
+    display: flex;
+    max-width: 972px;
+    gap: 2.48px;
+    flex-wrap: wrap;
+}
+
+.profile__image{
+    max-width: 322.35px;
+}

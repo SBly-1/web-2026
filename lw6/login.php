@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>login</title>
+        <link href="static/css/login.css" rel="stylesheet">
+    </head>
+    <body>
+        <main class="login">
+            <div class="login__intro">
+                <h1 class="login__title">Войти</h1>
+                <img class="login__image" src="static/images/happy_man.png" alt="Мужчина улыбается">
+            </div>
+            <form class="login__form">
+                <span class="login__label">Электропочта</span>
+                <input class="login__input" type="email">
+                <span class="login__hint">Введите электропочту в формате *****@***.**</span>
+                <span class="login__label">Пароль</span>
+                <div class="login__password" >
+                    <input class="login__input" type="password">
+                    <img class="login__password-toggle" src="static/images/eye_off.png" alt="Пароль скрыт">
+                </div>
+                <a class="login__button" href="#">Продолжить</a>
+            </form>  
+        </main>
+    </body>
+</html>

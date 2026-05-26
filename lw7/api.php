@@ -1,120 +1,143 @@
 <?php
 
-function readFileName(string $data): string {
-    $fileName = '';
-    $chars = str_split($data);
-    foreach ($chars as $char) {
-        if (!ctype_alnum($char) && $char !== '_' && $char !== '-' && $char !== '.') {
-            return '';
-        }
-        else {
-            $fileName = $fileName . $char;
-        }
-    }
-    $count = 0;
-    $chars = str_split($fileName);
-    foreach ($chars as $char) {
-        if ($char === '.') {
-            $count++;
-        }
-    }
-    if ($count > 1) {
-        return '';
-    }
-    return $fileName;
-}
-
-function separateFileResolution(string $data): string {
-    $fileResolution = '';
-    $beginResolution = false;
-    $chars = str_split($data);
-    foreach ($chars as $char) {
-        if ($beginResolution) {
-            $fileResolution = $fileResolution . $char;   
-        }
-        if ($char === '.') {
-            $beginResolution = true;
-        }
-    }
-    if ($beginResolution === false) {
-        return 'png';
-    }
-    $fileResolution = strtolower($fileResolution);
+function checkImageResolution(string $fileName): string {
+    $fileResolution = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
     if ($fileResolution !== 'png' && $fileResolution !== 'jpg' && $fileResolution !== 'jpeg' && $fileResolution !== 'webp') {
         return '';
+    }
+    if ($fileResolution === 'jpeg') {
+        return 'jpg';
     }
     return $fileResolution;
 }
 
-function separateFileName(string $data): string {
-    $fileName = '';
-    $chars = str_split($data);
-    foreach ($chars as $char) {
-        if ($char === '.') {
-            return $fileName;
-        }
-        $fileName = $fileName . $char;
-    }
-    return $fileName;
+function createImageName(string $fileResolution): string {
+    return 'post_' . time() . '_' . rand(1000, 9999) . '.' . $fileResolution;
+}
+
+function connectDatabase(): PDO {
+    $dsn = 'mysql:host=127.0.0.1;dbname=blog;charset=utf8mb4';
+    $user = 'root';
+    $password = '';
+    return new PDO($dsn, $user, $password);
+}
+
+function savePostToDatabase(PDO $connection, int $userId, ?string $content): int {
+    $query = "
+        INSERT INTO post (user_id, content, created_at)
+        VALUES ('$userId', '$content', NOW())
+    ";
+    $connection->exec($query);
+    return (int)$connection->lastInsertId();
+}
+
+function savePostImageToDatabase(PDO $connection, int $postId, string $imageUrl, string $imageAlt, int $imageNumber): void {
+    $query = "
+        INSERT INTO post_image (post_id, image_url, image_alt, image_number)
+        VALUES ('$postId', '$imageUrl', '$imageAlt', '$imageNumber')
+    ";
+    $connection->exec($query);
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
-    $json = file_get_contents('php://input');
+    if (!isset($_POST['post'])) {
+        http_response_code(400);
+        echo 'Нет данных поста';
+        exit;
+    }
+    $json = $_POST['post'];
     $data = json_decode($json, true);
+
     if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
         echo 'Ошибка JSON: ' . json_last_error_msg();
         exit;
     }
-    if (isset($data['fileName']) && isset($data['image']) && $data['fileName'] !== '' && $data['image'] !== ''){
-        $fileName = readFileName(trim($data['fileName']));
-        if ($fileName === '') {
+
+    if (!isset($data['userId']) || trim((string)$data['userId']) === '') {
+        http_response_code(400);
+        echo 'Не передан userId';
+        exit;
+    }
+
+    if (!is_numeric($data['userId'])) {
+        http_response_code(400);
+        echo 'userId должен быть числом';
+        exit;    
+    }
+    $userId = (int)$data['userId'];
+
+    if ($userId <= 0) {
+        http_response_code(400);
+        echo 'userId некорректный';
+        exit;
+    }
+
+    $content = null;
+    if (isset($data['content']) && trim($data['content']) !== '') {
+        $content = trim($data['content']);
+    }
+    
+    $imageAlt = 'Изображение поста';
+    if (isset($data['imageAlt']) && trim($data['imageAlt']) !== '') {
+        $imageAlt = trim($data['imageAlt']);
+    }
+
+    if (!isset($_FILES['images'])) {
+        http_response_code(400);
+        echo 'Картинка не передаётся';
+        exit;
+    }
+
+    $imageFolder = __DIR__ . '/static/images/';
+    $savedImages = [];
+    $imageCount = count($_FILES['images']['name']);
+
+    if ($imageCount === 0) {
+        http_response_code(400);
+        echo 'Картинки не передаются';
+        exit;
+    }
+
+    for ($i = 0; $i < $imageCount; $i++) {
+        if ($_FILES['images']['error'][$i] !== UPLOAD_ERR_OK) {
             http_response_code(400);
-            echo 'имя файла не корректно';
+            echo 'Ошбка загрузки картинки';
             exit;
         }
-        $fileResolution = separateFileResolution($fileName);
+
+        $fileResolution = checkImageResolution($_FILES['images']['name'][$i]);
         if ($fileResolution === '') {
             http_response_code(400);
-            echo 'разрешение файла не корректно';
-            exit;
-        }
-        $fileName = separateFileName($fileName);
-        if ($fileName === '') {
-            http_response_code(400);
-            echo 'имя файла не корректно';
-            exit;
-        }
-        $image = $data['image'];
-        $parts = explode('base64,', $image);
-        if (isset($parts[1])) {
-            $image = $parts[1]; 
-        }
-        else {
-            $image = $parts[0];
-        }
-
-        $imageData = base64_decode(trim($image), true);
-        if ($imageData === false) {
-            http_response_code(400);
-            echo 'Картинка повреждена или base64 некорректный';
+            echo 'Рвзрешение файла не корректное';
             exit;
         }
 
-        $filePath = __DIR__ . '/static/images/' . $fileName . '.' . $fileResolution;
-        if (file_put_contents($filePath, $imageData) === false) {
+        $imageName = createImageName($fileResolution);
+        $imagePath = $imageFolder . $imageName;
+
+        if (!move_uploaded_file($_FILES['images']['tmp_name'][$i], $imagePath)) {
             http_response_code(500);
-            echo 'Не удалось сохранить файл';
+            echo 'Не удалось сохранить картинку';
             exit;
         }
-
-        http_response_code(201);
-        echo 'Файл успешно сохранён';
+        $imageUrl = 'static/images/' . $imageName;
+        $savedImages[] = $imageUrl;
     }
-    else {
-        http_response_code(400);
-        echo 'Нет нужных полей';
+    try {
+        $connection = connectDatabase();
+        $postId = savePostToDatabase($connection, $userId, $content);
+        for ($i = 0; $i < count($savedImages); $i++) {
+            savePostImageToDatabase($connection, $postId, $savedImages[$i], $imageAlt, $i + 1);
+        }
+        http_response_code(201);
+        echo 'Пост успешно сохранён';
+        exit;
+    }
+    catch (Throwable $error) {
+        http_response_code(500);
+        echo 'Ошибка базы данных: ' . $error->getMessage();
         exit;
     }
 }

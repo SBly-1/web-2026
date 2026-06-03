@@ -141,24 +141,54 @@ function initPostSlider(post) {
 
 function initPostMore(post) {
     const text = post.querySelector('.post__text')
+    const textContent = post.querySelector('.post__text')
     const moreButton = post.querySelector('.post__more')
-    if (text === null || moreButton === null) {
+    if (text === null || moreButton === null || textContent === null) {
         return
     }
+    const fullText = textContent.textContent
     text.classList.add('post__text_collapsed')
     if (text.scrollHeight <= text.clientHeight) {
         text.classList.remove('post__text_collapsed')
         return
     }
     moreButton.hidden = false
+
+    function collapseText() {
+        text.classList.add('post__text_collapsed')
+        moreButton.textContent = 'Ещё'
+        let left = 0
+        let right = fullText.length
+        let bestText = ''
+
+        while (left <= right) {
+            const middle = Math.floor((left + right) / 2)
+            const shortText = fullText.slice(0, middle).trimEnd() + '...'
+            textContent.textContent = shortText
+            if (text.scrollHeight <= text.clientHeight + 1) {
+                bestText = shortText
+                left = middle + 1
+            } else {
+                right = middle - 1
+            }
+        }
+        textContent.textContent = bestText
+    }
+
+    function expandText() {
+        text.classList.remove('post__text_collapsed')
+        textContent.textContent = fullText
+        moreButton.textContent = 'Свернуть'
+    }
+
+    collapseText()
+
     moreButton.addEventListener('click', () => {
         const isCollapsed = text.classList.contains('post__text_collapsed')
         if (isCollapsed) {
-            text.classList.remove('post__text_collapsed')
-            moreButton.textContent = 'Свернуть'
+            expandText()
         } else {
-            text.classList.add('post__text_collapsed')
-            moreButton.textContent = 'Ещё'
+            collapseText()
         }
     })
 }

@@ -1,0 +1,82 @@
+.post__form{
+    display: flex;
+    flex-direction: row;
+}
+
+.form{
+    display: flex;
+    margin: 73px auto 0;
+    flex-direction: column;
+    max-width: 474px;
+}
+
+.form__media{
+    position: relative;
+    width: 474px;
+    height: 474px;
+    background-color:#F2F3F5;
+}
+
+.form__picture-example{
+    position: absolute;
+    transform: translate(-50%, 0);
+    top: 166.5px;
+    left: 50%;
+}
+
+.form__media-add-photo{
+    font: 500 16px/18px "Golos UI", sans-serif;
+    color: #FFFFFF;
+    background-color: #222222;
+    padding: 14.5px 16px;
+    border-radius: 10px;
+    border: none;
+    position: absolute;
+    transform: translate(-50%, 0);
+    top: 268px;
+    left: 50%;
+}
+
+.form__add-photo{
+    display: flex;
+    align-items: center;
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color:#3F8AE0;
+    border: none;
+    background-color: transparent;
+    gap: 4px;
+    padding: 6px 0;
+    margin-top: 20px;
+}
+
+.form__plus-icon{
+    width: 16px;
+}
+
+.form__add-text{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color: #808080;
+    border: none;
+    margin-top: 16px;
+    min-height: 198px;
+    resize: none;
+}
+
+.form__add-text::placeholder{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color: #808080;
+}
+
+.form__share{
+    font: 400 16px/18px "Golos UI", sans-serif;
+    color: #FFFFFF;
+    border: none;
+    background-color:#B4B4B4;
+    border-radius: 10px;
+    padding: 14.5px 26px;
+    max-width: 140px;
+    margin: 32px 0;
+}

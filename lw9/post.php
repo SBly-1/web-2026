@@ -11,6 +11,8 @@ if (isset($_GET['postId'])) {
     <head>
         <meta charset="UTF-8">
         <title>post</title>
+        <link href="static/css/modal.css" rel="stylesheet">
+        <link href="static/css/common.css" rel="stylesheet">
         <link href="static/css/home.css" rel="stylesheet">
         <script src="static/js/post.js" defer></script>
     </head>
@@ -45,5 +47,26 @@ if (isset($_GET['postId'])) {
                 ?>
             </main>
         </div>
+        <div class="modal"></div>
+        <template id="modal-template">
+            <div class="modal__content">
+                <button class="modal__close" type="button">×</button>
+                <div class="modal__slider">
+                    <button class="modal__slider-button modal__slider-button_prev" type="button">
+                        <img class="modal__slider-button-icon" 
+                            src="static/images/slider_arrow_prev.png" alt="Стрелка назад">
+                    </button>
+                    <img class="modal__image" src="" alt="">
+                    <button class="modal__slider-button modal__slider-button_next" type="button">
+                        <img class="modal__slider-button-icon" 
+                            src="static/images/slider_arrow_next.png" alt="Стрелка вперёд">
+                    </button>
+                </div>
+                <span class="modal__image-count">
+                    <span class="modal__image-count-current">1</span> из 
+                    <span class="modal__image-count-all">1</span>
+                </span>
+            </div>
+        </template>
     </body>
 </html>

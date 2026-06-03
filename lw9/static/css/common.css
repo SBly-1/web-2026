@@ -1,0 +1,43 @@
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_bold.woff2") format("woff2"),
+         url("../fonts/golos-ui_bold.woff") format("woff");
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_medium.woff2") format("woff2"),
+         url("../fonts/golos-ui_medium.woff") format("woff");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "Golos UI";
+    src: url("../fonts/golos-ui_regular.woff2") format("woff2"),
+         url("../fonts/golos-ui_regular.woff") format("woff");
+    font-weight: 400;
+}
+
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(34, 34, 34, 0.05);
+    gap: 12px;
+    padding-top: 40px;
+}
+
+.sidebar__item{
+    text-decoration: none;
+}
+
+.sidebar__icon{
+    width: 40px;
+    padding: 0 16px 0;
+}

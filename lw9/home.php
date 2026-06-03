@@ -8,6 +8,8 @@ include 'postsData.php';
     <head>
         <meta charset="UTF-8">
         <title>home</title>
+        <link href="static/css/modal.css" rel="stylesheet">
+        <link href="static/css/common.css" rel="stylesheet">
         <link href="static/css/home.css" rel="stylesheet">
         <script src="static/js/post.js" defer></script>
     </head>

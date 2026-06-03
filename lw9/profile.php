@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>profile</title>
+        <link href="static/css/common.css" rel="stylesheet">
         <link href="static/css/profile.css" rel="stylesheet">
     </head>
     <body>

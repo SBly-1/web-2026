@@ -16,7 +16,7 @@
                     <img class="sidebar__icon sidebar__item_active" 
                         src="static/images/icon_profile_active.png" alt="Профиль">
                 </a>
-                <a class="sidebar__item" href="#">
+                <a class="sidebar__item" href="post_form">
                     <img class="sidebar__icon" src="static/images/icon_add.png" alt="Добавить">
                 </a>
             </div>

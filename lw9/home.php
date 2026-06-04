@@ -23,7 +23,7 @@ include 'postsData.php';
                 <a class="sidebar__item" href="profile">
                     <img class="sidebar__icon" src="static/images/icon_profile.png" alt="Профиль">
                 </a>
-                <a class="sidebar__item" href="#">
+                <a class="sidebar__item" href="post_form">
                     <img class="sidebar__icon" src="static/images/icon_add.png" alt="Добавить">
                 </a>
             </div>

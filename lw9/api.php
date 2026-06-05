@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
 
 function checkImageResolution(string $fileName): string {
     $fileResolution = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
@@ -22,7 +23,7 @@ function connectDatabase(): PDO {
     return new PDO($dsn, $user, $password);
 }
 
-function savePostToDatabase(PDO $connection, int $userId, ?string $content): int {
+function savePostToDatabase(PDO $connection, int $userId, string $content): int {
     $query = "
         INSERT INTO post (user_id, content, created_at)
         VALUES ('$userId', '$content', NOW())
@@ -43,7 +44,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method === 'POST') {
     if (!isset($_POST['post'])) {
         http_response_code(400);
-        echo 'Нет данных поста';
+        echo json_encode([
+            'success' => false,
+            'message' => 'Нет данных поста'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
     $json = $_POST['post'];
@@ -51,33 +55,50 @@ if ($method === 'POST') {
 
     if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
-        echo 'Ошибка JSON: ' . json_last_error_msg();
+        echo json_encode([
+            'success' => false,
+            'message' => 'Ошибка JSON: ' . json_last_error_msg()
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     if (!isset($data['userId']) || trim((string)$data['userId']) === '') {
         http_response_code(400);
-        echo 'Не передан userId';
+        echo json_encode([
+            'success' => false,
+            'message' => 'Не передан userId'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     if (!is_numeric($data['userId'])) {
         http_response_code(400);
-        echo 'userId должен быть числом';
+        echo json_encode([
+            'success' => false,
+            'message' => 'userId должен быть числом'
+        ], JSON_UNESCAPED_UNICODE);
         exit;    
     }
     $userId = (int)$data['userId'];
 
     if ($userId <= 0) {
         http_response_code(400);
-        echo 'userId некорректный';
+        echo json_encode([
+            'success' => false,
+            'message' => 'userId некорректный'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     $content = null;
-    if (isset($data['content']) && trim($data['content']) !== '') {
-        $content = trim($data['content']);
+    if (!isset($data['content']) || trim($data['content']) === '') {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Текст поста не передан'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
     }
+    $content = trim($data['content']);
     
     $imageAlt = 'Изображение поста';
     if (isset($data['imageAlt']) && trim($data['imageAlt']) !== '') {
@@ -86,7 +107,10 @@ if ($method === 'POST') {
 
     if (!isset($_FILES['images'])) {
         http_response_code(400);
-        echo 'Картинка не передаётся';
+        echo json_encode([
+            'success' => false,
+            'message' => 'Картинка не передаётся'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
@@ -94,23 +118,41 @@ if ($method === 'POST') {
     $savedImages = [];
     $imageCount = count($_FILES['images']['name']);
 
+    if ($imageCount > 10) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Можно загрузить не больше 10 картинок'
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     if ($imageCount === 0) {
         http_response_code(400);
-        echo 'Картинки не передаются';
+        echo json_encode([
+            'success' => false,
+            'message' => 'Картинки не передаются'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 
     for ($i = 0; $i < $imageCount; $i++) {
         if ($_FILES['images']['error'][$i] !== UPLOAD_ERR_OK) {
             http_response_code(400);
-            echo 'Ошбка загрузки картинки';
+            echo json_encode([
+                'success' => false,
+                'message' => 'Ошбка загрузки картинки'
+            ], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
         $fileResolution = checkImageResolution($_FILES['images']['name'][$i]);
         if ($fileResolution === '') {
             http_response_code(400);
-            echo 'Рвзрешение файла не корректное';
+            echo json_encode([
+                'success' => false,
+                'message' => 'Рвзрешение файла не корректное'
+            ], JSON_UNESCAPED_UNICODE);
             exit;
         }
 
@@ -119,7 +161,10 @@ if ($method === 'POST') {
 
         if (!move_uploaded_file($_FILES['images']['tmp_name'][$i], $imagePath)) {
             http_response_code(500);
-            echo 'Не удалось сохранить картинку';
+            echo json_encode([
+                'success' => false,
+                'message' => 'Не удалось сохранить картинку'
+            ], JSON_UNESCAPED_UNICODE);
             exit;
         }
         $imageUrl = 'static/images/' . $imageName;
@@ -132,18 +177,27 @@ if ($method === 'POST') {
             savePostImageToDatabase($connection, $postId, $savedImages[$i], $imageAlt, $i + 1);
         }
         http_response_code(201);
-        echo 'Пост успешно сохранён';
+        echo json_encode([
+            'success' => true,
+            'message' => 'Пост успешно сохранён'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
     catch (Throwable $error) {
         http_response_code(500);
-        echo 'Ошибка базы данных: ' . $error->getMessage();
+        echo json_encode([
+            'success' => false,
+            'message' => 'Ошибка базы данных'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 }
 else {
     http_response_code(405);
-    echo 'Метод не поддерживается';
+    echo json_encode([
+        'success' => false,
+        'message' => 'Метод не поддерживается'
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 ?>

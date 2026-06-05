@@ -10,6 +10,15 @@
     max-width: 474px;
 }
 
+.post-form__content{
+    display: flex;
+    flex-direction: column;
+}
+
+.post-form__content[hidden]{
+    display: none;
+}
+
 .post-form__media{
     position: relative;
     width: 474px;
@@ -171,4 +180,43 @@
 
 .post-form__slider-button_next{
     right: 16px;
+}
+
+.post-form__error-message{
+    display: flex;
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color:#740000;
+    background-color:#FFECEC;
+    padding: 12px;
+    border-radius: 10px;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.post-form__error-message[hidden]{
+    display: none;
+}
+
+.post-form__success-message{
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color: #004905;
+}
+
+.post-form__success-message[hidden]{
+    display: none;
+}
+
+.post-form__remove-photo-button{
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    width: 25px;
+    height: 25px;
+    background-color: rgba(34, 34, 34, 0.5);
+    border: none;
+    border-radius: 20px;
+    color: #FFFFFF;
+    font: 400 24px/24px "Golos UI", sans-serif;
 }

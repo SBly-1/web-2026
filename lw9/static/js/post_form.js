@@ -13,6 +13,12 @@ const imageCount = document.querySelector('.post-form__image-count-all')
 const prevButton = document.querySelector('.post-form__slider-button_prev')
 const nextButton = document.querySelector('.post-form__slider-button_next')
 const imageCountBlock = document.querySelector('.post-form__image-count')
+const removePhotoButton = document.querySelector('.post-form__remove-photo-button')
+
+const postFormContent = document.querySelector('.post-form__content')
+const successMessage = document.querySelector('.post-form__success-message')
+const errorMessage = document.querySelector('.post-form__error-message')
+const errorText = document.querySelector('.post-form__error-text')
 
 const photos = []
 const maxPhotoCount = 10
@@ -137,23 +143,74 @@ if (prevButton !== null) {
     })
 }
 
+if (removePhotoButton !== null) {
+    removePhotoButton.addEventListener('click', () => {
+        if (photos.length === 0) {
+            return
+        }
+        photos.splice(currentIndexImage, 1)
+        if (photos.length === 0) {
+            currentIndexImage = 0
+            if (slider !== null && sliderImage !== null && placeholderIcon !== null && primaryAddPhotoButton !== null) {
+                sliderImage.src = ''
+                sliderImage.alt = ''
+                slider.hidden = true
+                placeholderIcon.hidden = false
+                primaryAddPhotoButton.hidden = false
+            }
+            updatePhotoLimitMessage()
+            updateShareButton()
+            return
+        }
+        if (currentIndexImage >= photos.length) {
+            currentIndexImage = photos.length - 1
+        }
+        showCurrentPhoto()
+        updatePhotoLimitMessage()
+        updateShareButton()
+    })
+}
+
 if (shareButton !== null && captionInput !== null) {
-    shareButton.addEventListener('click', () => {
+    shareButton.addEventListener('click', async () => {
         if (isSubmitting) {
             return
         }
         isSubmitting = true
-        shareButton.disabled = true
-        const newPost = {
-            text: captionInput.value.trim(),
-            photos: photos.map((photo, index) => ({
-                number: index + 1,
-                name: photo.name,
-                type: photo.type,
-                size: photo.size
-            }))
+        updateShareButton()
+        if (errorMessage !== null) {
+            errorMessage.hidden = true
         }
-        console.log(newPost)
-        resetForm()
+        const formData = new FormData()
+        const post = {
+            userId: 1,
+            content: captionInput.value.trim(),
+            imageAlt: 'Изображение поста'
+        }
+        formData.append('post', JSON.stringify(post))
+        for (const photo of photos) {
+            formData.append('images[]', photo)
+        }
+        try {
+            const response = await fetch('api.php', {
+                method: 'POST',
+                body: formData
+            })
+            if (!response.ok) {
+                throw new Error('Не удалось сохранить пост')
+            }
+            if (postFormContent !== null && successMessage !== null && errorMessage !== null) {
+                postFormContent.hidden = true
+                errorMessage.hidden = true
+                successMessage.hidden = false
+            }
+        } catch (error) {
+            isSubmitting = false
+            updateShareButton()
+            if (errorMessage !== null && errorText !== null) {
+                errorText.textContent = 'Не удалось сохранить пост. Попробуйте ещё раз'
+                errorMessage.hidden = false
+            }
+        }
     })
 }

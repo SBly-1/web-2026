@@ -5,6 +5,7 @@
         <title>login</title>
         <link href="static/css/common.css" rel="stylesheet">
         <link href="static/css/login.css" rel="stylesheet">
+        <script src="static/js/login.js" defer></script>
     </head>
     <body>
         <main class="login">
@@ -13,12 +14,16 @@
                 <img class="login__image" src="static/images/happy_man.png" alt="Мужчина улыбается">
             </div>
             <form class="login__form">
+                <div class="login__error-message" hidden>
+                    <span class="login__error-icon">🤓</span>
+                    <span class="login__error-text">Поля обязательные</span>
+                </div>
                 <span class="login__label">Электропочта</span>
-                <input class="login__input" type="email">
+                <input class="login__input login__input_email" type="email">
                 <span class="login__hint">Введите электропочту в формате *****@***.**</span>
                 <span class="login__label">Пароль</span>
                 <div class="login__password" >
-                    <input class="login__input" type="password">
+                    <input class="login__input login__input_password" type="password">
                     <img class="login__password-toggle" src="static/images/eye_off.png" alt="Пароль скрыт">
                 </div>
                 <a class="login__button" href="#">Продолжить</a>

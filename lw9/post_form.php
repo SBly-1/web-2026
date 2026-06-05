@@ -43,7 +43,7 @@
                 </div>
                 <input class="post-form__photo-input" type="file" accept="image/*" multiple hidden>
                 <div class="post-form__photo-limit-message" hidden>
-                    <span>&#128526;</span>
+                    <span>😎</span>
                     <span>Вы добавили максимум фото, круто!</span>
                 </div>
                 <button class="post-form__add-photo-button post-form__add-photo-button_secondary" type="button">

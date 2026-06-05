@@ -77,3 +77,27 @@
     border-radius: 10px;
     margin-top: 32px;
 }
+
+.login__error-message{
+    display: flex;
+    font: 400 15px/18px "Golos UI", sans-serif;
+    letter-spacing: -0.15px;
+    color:#740000;
+    background-color:#FFECEC;
+    padding: 12px;
+    border-radius: 10px;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.login__error-message[hidden]{
+    display: none;
+}
+
+.error{
+    color: #E64646;
+}
+
+.input-error{
+    border: 1px solid #E64646;
+}
